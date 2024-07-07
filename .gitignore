@@ -1,0 +1,101 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+/lib/firebase_options.dart
+/ios/firebase_app_id_file.json
+/macos/firebase_app_id_file.json
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/macos/Runner/GoogleService-Info.plist
+
+# iOS specific
+.DS_Store
+/ios/Pods/
+/ios/Podfile.lock
+/ios/Podfile.local.lock
+/ios/.generated/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/flutter_project.pbxproj
+/ios/Flutter/flutter_tools.podspec
+/ios/Flutter/flutter.xcconfig
+/ios/Flutter/gen_snapshot
+/ios/Flutter/ios-sim
+/ios/Flutter/quick_gen_snapshot
+/ios/Flutter/xcfilelist
+/ios/Pods
+/ios/Podfile
+/ios/.symlinks/
+/ios/.flutter-plugins
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+
+# macos specific
+.DS_Store
+/macos/Pods/
+/macos/Podfile.lock
+/macos/Podfile.local.lock
+/macos/.generated/
+/macos/Flutter/App.framework
+/macos/Flutter/Flutter.framework
+/macos/Flutter/Flutter.podspec
+/macos/Flutter/flutter_export_environment.sh
+/macos/Flutter/flutter_project.pbxproj
+/macos/Flutter/flutter_tools.podspec
+/macos/Flutter/flutter.xcconfig
+/macos/Flutter/gen_snapshot
+/macos/Flutter/macos-sim
+/macos/Flutter/quick_gen_snapshot
+/macos/Flutter/xcfilelist
+/macos/Pods
+/macos/Podfile
+/macos/.symlinks/
+/macos/.flutter-plugins
+/macos/Flutter/App.framework
+/macos/Flutter/Flutter.framework
+
+*.keystore
+pubspec.lock
