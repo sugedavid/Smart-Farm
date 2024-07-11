@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utils/colors.dart';
-
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showToast(
     String message, BuildContext context,
     {SnackBarAction? action, Status status = Status.info}) {
@@ -18,13 +16,13 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showToast(
 Color getColorForStatus(Status status) {
   switch (status) {
     case Status.success:
-      return Colors.green.shade600;
+      return Colors.green.shade400;
     case Status.error:
       return Colors.red;
     case Status.warning:
       return Colors.orange;
     case Status.info:
-      return AppColors.primaryColor;
+      return Colors.green.shade400;
   }
 }
 

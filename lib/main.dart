@@ -62,8 +62,12 @@ class _MainAppState extends State<MainApp> {
         ),
         useMaterial3: true,
       ),
-      // darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorSchemeSeed: AppColors.primaryColor,
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.light,
       home: mainPage(),
     );
   }
