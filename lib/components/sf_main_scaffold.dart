@@ -6,6 +6,7 @@ import 'package:smart_farm/utils/firebase/user_utils.dart';
 import 'package:smart_farm/utils/responsiveness.dart';
 import 'package:smart_farm/views/email_verification/email_verification_page.dart';
 import 'package:smart_farm/views/home/home_page.dart';
+import 'package:smart_farm/views/settings/settings_page.dart';
 
 import '../utils/colors.dart';
 
@@ -61,7 +62,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
         HomePage(
           userData: userData,
         ),
-        HomePage(
+        SettingsPage(
           userData: userData,
         ),
         // TransactionsPage(
@@ -87,17 +88,17 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
     if (_selectedIndex == 0) {
       return const Text(
         'Home',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.w400),
       );
     } else if (_selectedIndex == 1) {
       return const Text(
         'Diagnosis',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.w400),
       );
     } else {
       return const Text(
         'Settings',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.w400),
       );
     }
   }
@@ -126,7 +127,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                 //   fetchUserData();
                 // }
               },
-              icon: const Icon(Icons.edit_square),
+              icon: const Icon(Icons.edit_outlined),
             ),
         ],
       ),
@@ -152,31 +153,19 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                             _selectedIndex == 0
                                 ? Icons.home
                                 : Icons.home_outlined,
-                            color: _selectedIndex == 0
-                                ? AppColors.primaryColor
-                                : Colors.blueGrey,
                           ),
                           label: const Text(
                             'Home',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                            ),
                           ),
                         ),
                         NavigationRailDestination(
                           icon: Icon(
                             _selectedIndex == 1
-                                ? Icons.history
-                                : Icons.history_outlined,
-                            color: _selectedIndex == 1
-                                ? AppColors.primaryColor
-                                : Colors.blueGrey,
+                                ? Icons.auto_awesome
+                                : Icons.auto_awesome_outlined,
                           ),
                           label: const Text(
-                            'Transactions',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                            ),
+                            'Diagnosis',
                           ),
                         ),
                         NavigationRailDestination(
@@ -184,15 +173,9 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                             _selectedIndex == 2
                                 ? Icons.settings
                                 : Icons.settings_outlined,
-                            color: _selectedIndex == 2
-                                ? AppColors.primaryColor
-                                : Colors.blueGrey,
                           ),
                           label: const Text(
                             'Settings',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                            ),
                           ),
                         ),
                       ]),
@@ -216,6 +199,8 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                 ),
               ],
             ),
+
+      // bottom nav bar
       bottomNavigationBar: kIsWeb && isLargeScreen(context)
           ? null
           : NavigationBarTheme(
@@ -224,9 +209,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                   (states) {
                     // Define the text style for different states
                     return TextStyle(
-                        color: states.contains(MaterialState.selected)
-                            ? AppColors.primaryColor
-                            : Colors.blueGrey,
+                        fontSize: 13,
                         fontWeight: states.contains(MaterialState.selected)
                             ? FontWeight.w600
                             : FontWeight.w400);
@@ -234,24 +217,19 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                 ),
               ),
               child: NavigationBar(
+                surfaceTintColor: Theme.of(context).colorScheme.surface,
                 destinations: <Widget>[
                   NavigationDestination(
                     icon: Icon(
                       _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-                      color: _selectedIndex == 0
-                          ? AppColors.primaryColor
-                          : Colors.blueGrey,
                     ),
                     label: 'Home',
                   ),
                   NavigationDestination(
                     icon: Icon(
                       _selectedIndex == 1
-                          ? Icons.image_search
-                          : Icons.image_search_outlined,
-                      color: _selectedIndex == 1
-                          ? AppColors.primaryColor
-                          : Colors.blueGrey,
+                          ? Icons.auto_awesome
+                          : Icons.auto_awesome_outlined,
                     ),
                     label: 'Diagnosis',
                   ),
@@ -260,9 +238,6 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                       _selectedIndex == 2
                           ? Icons.settings
                           : Icons.settings_outlined,
-                      color: _selectedIndex == 2
-                          ? AppColors.primaryColor
-                          : Colors.blueGrey,
                     ),
                     label: 'Settings',
                   ),
@@ -271,6 +246,12 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                 onDestinationSelected: _onItemTapped,
               ),
             ),
+
+      // floating too
+      floatingActionButton: const FloatingActionButton(
+        onPressed: null,
+        child: Icon(Icons.camera_alt_rounded),
+      ),
     );
   }
 }

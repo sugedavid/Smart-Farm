@@ -125,7 +125,6 @@ class SFTextField extends StatelessWidget {
                 labelText,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: AppColors.primaryColor,
                 ),
               ),
               Text(
@@ -156,17 +155,16 @@ class SFTextField extends StatelessWidget {
             focusNode: focusNode,
             decoration: InputDecoration(
               filled: true,
-              fillColor: AppColors.backgroundColor,
+              fillColor: Theme.of(context).colorScheme.onInverseSurface,
               hintText: hint,
-              hintStyle: const TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(fontWeight: FontWeight.w400),
               contentPadding: const EdgeInsets.all(12.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
-                borderSide: const BorderSide(color: Colors.white),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: AppColors.backgroundColor,
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
                 ), // Change the border color here
                 borderRadius: BorderRadius.circular(4.0),
               ),
@@ -178,11 +176,6 @@ class SFTextField extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
-                borderSide: BorderSide(
-                  color: readOnly!
-                      ? AppColors.backgroundColor
-                      : AppColors.primaryColor,
-                ), // Set focused border color to transparent
               ),
             ),
             validator: validate! ? _validator() : null,

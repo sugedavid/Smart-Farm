@@ -28,13 +28,12 @@ class SFOnBoardingScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle defaultStyle =
-        const TextStyle(color: Colors.blueGrey, fontSize: 16.0);
+    TextStyle defaultStyle = TextStyle(
+        color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 16.0);
     TextStyle linkStyle = const TextStyle(
         color: AppColors.primaryColor, fontWeight: FontWeight.w500);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: null,
       body: Center(
         child: Center(
