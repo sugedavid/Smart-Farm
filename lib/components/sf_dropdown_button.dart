@@ -4,15 +4,18 @@ import '../utils/colors.dart';
 import '../utils/spacing.dart';
 
 class SFDropdownButton extends StatefulWidget {
-  const SFDropdownButton(
-      {super.key,
-      required this.labelText,
-      required this.list,
-      required this.controller});
+  const SFDropdownButton({
+    super.key,
+    required this.labelText,
+    required this.list,
+    required this.controller,
+    required this.onChanged,
+  });
 
   final String labelText;
   final List<String> list;
   final TextEditingController controller;
+  final Function() onChanged;
 
   @override
   State<SFDropdownButton> createState() => _SFDropdownButtonState();
@@ -43,7 +46,6 @@ class _SFDropdownButtonState extends State<SFDropdownButton> {
                 widget.labelText,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: AppColors.primaryColor,
                 ),
               ),
               const Text(
@@ -69,19 +71,19 @@ class _SFDropdownButtonState extends State<SFDropdownButton> {
               elevation: 16,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: AppColors.backgroundColor,
+                fillColor: Theme.of(context).colorScheme.onInverseSurface,
                 hintText: "Select",
                 hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.all(12.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4.0),
-                  borderSide:
-                      const BorderSide(color: AppColors.backgroundColor),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.onInverseSurface),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      color: AppColors
-                          .backgroundColor), // Change the border color here
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                  ),
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -95,6 +97,7 @@ class _SFDropdownButtonState extends State<SFDropdownButton> {
                 setState(() {
                   dropdownValue = value!;
                   widget.controller.text = dropdownValue;
+                  widget.onChanged();
                 });
               },
               items: widget.list.map<DropdownMenuItem<String>>((String value) {
