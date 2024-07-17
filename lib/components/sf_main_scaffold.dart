@@ -56,22 +56,16 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
             (route) => false);
       }
       _widgetOptions = <Widget>[
+        // home page
         HomePage(
           userData: userData,
         ),
-        HomePage(
-          userData: userData,
-        ),
+        // AI page
+        const SizedBox(),
+        // settings page
         SettingsPage(
           userData: userData,
         ),
-        // TransactionsPage(
-        //   userData: userData,
-        //   bankAccounts: bankAccounts,
-        // ),
-        // ProfilePage(
-        //   userData: userData,
-        // ),
       ];
     });
     toggleLoading();
@@ -246,12 +240,6 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                 onDestinationSelected: _onItemTapped,
               ),
             ),
-
-      // floating too
-      floatingActionButton: const FloatingActionButton(
-        onPressed: null,
-        child: Icon(Icons.camera_alt_rounded),
-      ),
     );
   }
 }
