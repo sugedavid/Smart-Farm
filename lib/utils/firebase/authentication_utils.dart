@@ -54,7 +54,7 @@ Future<void> logInUser(
     )
         .then((UserCredential value) {
       // navigate to home page
-      showToast('Signed in', context);
+      showToast('Signed in', context, status: Status.success);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const SFMainScaffold(),

@@ -175,6 +175,9 @@ class SFTextField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4.0),
               ),
               focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                ),
                 borderRadius: BorderRadius.circular(4.0),
               ),
             ),

@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_farm/utils/responsiveness.dart';
 
-import '../utils/colors.dart';
-
 class SFSinglePageScaffold extends StatefulWidget {
   const SFSinglePageScaffold({
     super.key,
@@ -27,7 +25,6 @@ class _SFSinglePageScaffoldState extends State<SFSinglePageScaffold>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(
           widget.title,
