@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utils/colors.dart';
 import '../utils/spacing.dart';
 
 class SFDropdownButton extends StatefulWidget {
@@ -10,9 +9,11 @@ class SFDropdownButton extends StatefulWidget {
     required this.list,
     required this.controller,
     required this.onChanged,
+    this.required = true,
   });
 
   final String labelText;
+  final bool required;
   final List<String> list;
   final TextEditingController controller;
   final Function() onChanged;
@@ -48,13 +49,14 @@ class _SFDropdownButtonState extends State<SFDropdownButton> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const Text(
-                '*',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.red,
+              if (widget.required)
+                const Text(
+                  '*',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  ),
                 ),
-              ),
             ],
           ),
           AppSpacing.xSmall
@@ -78,7 +80,7 @@ class _SFDropdownButtonState extends State<SFDropdownButton> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4.0),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.onInverseSurface),
+                      color: Theme.of(context).colorScheme.surfaceVariant),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -88,8 +90,8 @@ class _SFDropdownButtonState extends State<SFDropdownButton> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4.0),
-                  borderSide: const BorderSide(
-                    color: AppColors.primaryColor,
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                   ), // Set focused border color to transparent
                 ),
               ),

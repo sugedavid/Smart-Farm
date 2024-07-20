@@ -8,12 +8,13 @@ class SFPrimaryButton extends StatefulWidget {
   final bool enable;
   final Color? backgroundColor;
 
-  const SFPrimaryButton(
-      {super.key,
-      required this.text,
-      required this.onPressed,
-      this.enable = true,
-      this.backgroundColor = AppColors.primaryColor});
+  const SFPrimaryButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.enable = true,
+    this.backgroundColor,
+  });
 
   @override
   SFPrimaryButtonState createState() => SFPrimaryButtonState();
@@ -21,8 +22,17 @@ class SFPrimaryButton extends StatefulWidget {
 
 class SFPrimaryButtonState extends State<SFPrimaryButton> {
   bool isLoading = false;
+  late Color bgColor;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    bgColor = widget.backgroundColor ?? Theme.of(context).colorScheme.primary;
+
     void toggleLoading(bool value) {
       setState(() {
         isLoading = value;
@@ -31,14 +41,7 @@ class SFPrimaryButtonState extends State<SFPrimaryButton> {
 
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: widget.backgroundColor,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-        ),
+      child: FilledButton(
         onPressed: isLoading || !widget.enable
             ? null
             : () async {

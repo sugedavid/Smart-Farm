@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_farm/data/models/user.dart';
 import 'package:smart_farm/utils/firebase/user_utils.dart';
 import 'package:smart_farm/utils/responsiveness.dart';
+import 'package:smart_farm/views/ai/chat_page.dart';
+import 'package:smart_farm/views/diagnosis_history/diagnosis_history_page.dart';
 import 'package:smart_farm/views/email_verification/email_verification_page.dart';
 import 'package:smart_farm/views/home/home_page.dart';
 import 'package:smart_farm/views/settings/settings_page.dart';
@@ -11,7 +13,9 @@ import 'package:smart_farm/views/settings/settings_page.dart';
 import '../utils/colors.dart';
 
 class SFMainScaffold extends StatefulWidget {
-  const SFMainScaffold({super.key});
+  const SFMainScaffold({super.key, this.selectedIndex = 0});
+
+  final int selectedIndex;
 
   @override
   State<SFMainScaffold> createState() => _SFMainScaffoldState();
@@ -35,6 +39,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.selectedIndex;
     fetchUserData();
   }
 
@@ -61,7 +66,9 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
           userData: userData,
         ),
         // AI page
-        const SizedBox(),
+        const ChatPage(),
+        // diagnosis page
+        const DiagnosisHistoryPage(),
         // settings page
         SettingsPage(
           userData: userData,
@@ -86,7 +93,12 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
       );
     } else if (_selectedIndex == 1) {
       return const Text(
-        'Diagnosis',
+        'AI Chatbot',
+        style: TextStyle(fontWeight: FontWeight.w400),
+      );
+    } else if (_selectedIndex == 2) {
+      return const Text(
+        'Diagnosis History',
         style: TextStyle(fontWeight: FontWeight.w400),
       );
     } else {
@@ -100,99 +112,117 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: title(),
-        actions: [
-          // edit profile
-          if (_selectedIndex == 2)
-            IconButton(
-              onPressed: () async {
-                // final result = await Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => EditProfilePage(
-                //       userData: userData,
-                //     ),
-                //   ),
-                // );
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              title: title(),
+              automaticallyImplyLeading: false,
+              floating: true,
+              actions: [
+                // edit profile
+                if (_selectedIndex == 3)
+                  IconButton(
+                    onPressed: () async {
+                      // final result = await Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => EditProfilePage(
+                      //       userData: userData,
+                      //     ),
+                      //   ),
+                      // );
 
-                // if (result != null && result) {
-                //   fetchUserData();
-                // }
-              },
-              icon: const Icon(Icons.edit_outlined),
-            ),
-        ],
-      ),
-      body: _isLoading
-          ? const LinearProgressIndicator(
-              color: AppColors.primaryColor,
+                      // if (result != null && result) {
+                      //   fetchUserData();
+                      // }
+                    },
+                    icon: const Icon(Icons.edit_outlined),
+                  ),
+              ],
             )
-          : Row(
-              children: [
-                // master
-                if (kIsWeb && isLargeScreen(context)) ...{
-                  NavigationRail(
-                      selectedIndex: _selectedIndex,
-                      onDestinationSelected: (int index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      },
-                      labelType: NavigationRailLabelType.all,
-                      destinations: <NavigationRailDestination>[
-                        NavigationRailDestination(
-                          icon: Icon(
-                            _selectedIndex == 0
-                                ? Icons.home
-                                : Icons.home_outlined,
-                          ),
-                          label: const Text(
-                            'Home',
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(
-                            _selectedIndex == 1
-                                ? Icons.auto_awesome
-                                : Icons.auto_awesome_outlined,
-                          ),
-                          label: const Text(
-                            'Diagnosis',
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(
-                            _selectedIndex == 2
-                                ? Icons.settings
-                                : Icons.settings_outlined,
-                          ),
-                          label: const Text(
-                            'Settings',
-                          ),
-                        ),
-                      ]),
+          ];
+        },
+        body: Row(
+          children: [
+            // master
+            if (kIsWeb && isLargeScreen(context)) ...{
+              NavigationRail(
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: (int index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
                 },
-
-                // detail
-                Expanded(
-                  child: Container(
-                    alignment: kIsWeb && isLargeScreen(context)
-                        ? Alignment.center
-                        : null,
-                    child: SizedBox(
-                      width: kIsWeb ? 400 : null,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 20.0),
-                        child: _widgetOptions.elementAt(_selectedIndex),
-                      ),
+                labelType: NavigationRailLabelType.all,
+                destinations: <NavigationRailDestination>[
+                  NavigationRailDestination(
+                    icon: Icon(
+                      _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+                    ),
+                    label: const Text(
+                      'Home',
                     ),
                   ),
+                  NavigationRailDestination(
+                    icon: Icon(
+                      _selectedIndex == 1
+                          ? Icons.auto_awesome
+                          : Icons.auto_awesome_outlined,
+                    ),
+                    label: const Text(
+                      'Chatbot',
+                    ),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(
+                      _selectedIndex == 2
+                          ? Icons.analytics
+                          : Icons.analytics_outlined,
+                    ),
+                    label: const Text(
+                      'Diagnosis',
+                    ),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(
+                      _selectedIndex == 3
+                          ? Icons.settings
+                          : Icons.settings_outlined,
+                    ),
+                    label: const Text(
+                      'Settings',
+                    ),
+                  ),
+                ],
+              ),
+            },
+
+            // detail
+            Expanded(
+              child: Container(
+                alignment:
+                    kIsWeb && isLargeScreen(context) ? Alignment.center : null,
+                child: SizedBox(
+                  width: kIsWeb ? 400 : null,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 0.0),
+                    child: _isLoading
+                        ? const Align(
+                            alignment: Alignment.center,
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            ),
+                          )
+                        : _widgetOptions.elementAt(_selectedIndex),
+                  ),
                 ),
-              ],
+              ),
             ),
+          ],
+        ),
+      ),
 
       // bottom nav bar
       bottomNavigationBar: kIsWeb && isLargeScreen(context)
@@ -211,7 +241,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                 ),
               ),
               child: NavigationBar(
-                surfaceTintColor: Theme.of(context).colorScheme.surface,
+                surfaceTintColor: Theme.of(context).colorScheme.background,
                 destinations: <Widget>[
                   NavigationDestination(
                     icon: Icon(
@@ -225,11 +255,19 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                           ? Icons.auto_awesome
                           : Icons.auto_awesome_outlined,
                     ),
-                    label: 'Diagnosis',
+                    label: 'Chatbot',
                   ),
                   NavigationDestination(
                     icon: Icon(
                       _selectedIndex == 2
+                          ? Icons.analytics
+                          : Icons.analytics_outlined,
+                    ),
+                    label: 'Diagnosis',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(
+                      _selectedIndex == 3
                           ? Icons.settings
                           : Icons.settings_outlined,
                     ),
