@@ -13,6 +13,7 @@ import 'package:smart_farm/views/login/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   // firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -20,7 +21,6 @@ Future<void> main() async {
 
   // gemma
   await FlutterGemmaPlugin.instance.init(
-    maxTokens: 512,
     temperature: 1.0,
     topK: 1,
     randomSeed: 1,

@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:smart_farm/utils/spacing.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showToast(
     String message, BuildContext context,
     {SnackBarAction? action, Status status = Status.info}) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: getColorForStatus(status, context),
-      content: Text(
-        message,
-        style: TextStyle(color: getTextColorForStatus(status, context)),
+      backgroundColor: getBgColor(status, context),
+      content: Row(
+        children: [
+          // icon
+          Icon(
+            getIconForStatus(status, context),
+            color: getTextColor(status, context),
+          ),
+          AppWidthSpacing.small,
+
+          // message
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: getTextColor(status, context)),
+            ),
+          ),
+        ],
       ),
       duration: const Duration(seconds: 4),
       action: action,
@@ -16,7 +33,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showToast(
   );
 }
 
-Color getColorForStatus(
+// bg color
+Color getBgColor(
   Status status,
   BuildContext context,
 ) {
@@ -32,7 +50,8 @@ Color getColorForStatus(
   }
 }
 
-Color getTextColorForStatus(
+// text color
+Color getTextColor(
   Status status,
   BuildContext context,
 ) {
@@ -45,6 +64,23 @@ Color getTextColorForStatus(
       return Colors.orange;
     case Status.info:
       return Colors.blue;
+  }
+}
+
+// icon
+IconData getIconForStatus(
+  Status status,
+  BuildContext context,
+) {
+  switch (status) {
+    case Status.success:
+      return Icons.check_circle;
+    case Status.error:
+      return Icons.error;
+    case Status.warning:
+      return Icons.warning_amber_rounded;
+    case Status.info:
+      return Icons.info;
   }
 }
 

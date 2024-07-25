@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_farm/components/sf_dialog.dart';
+import 'package:smart_farm/components/sf_toast_notification.dart';
+import 'package:smart_farm/data/helper/chat_manager.dart';
+import 'package:smart_farm/data/models/message.dart';
 import 'package:smart_farm/data/models/user.dart';
 import 'package:smart_farm/utils/firebase/user_utils.dart';
 import 'package:smart_farm/utils/responsiveness.dart';
@@ -8,6 +12,7 @@ import 'package:smart_farm/views/ai/chat_page.dart';
 import 'package:smart_farm/views/diagnosis_history/diagnosis_history_page.dart';
 import 'package:smart_farm/views/email_verification/email_verification_page.dart';
 import 'package:smart_farm/views/home/home_page.dart';
+import 'package:smart_farm/views/settings/edit_profile_page.dart';
 import 'package:smart_farm/views/settings/settings_page.dart';
 
 import '../utils/colors.dart';
@@ -36,12 +41,8 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
   UserModel userData = UserModel.toEmpty();
   bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex;
-    fetchUserData();
-  }
+  ChatManager chatManager = ChatManager();
+  var messages = <MessageModel>[];
 
   // fetch user data
   void fetchUserData() async {
@@ -66,7 +67,13 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
           userData: userData,
         ),
         // AI page
-        const ChatPage(),
+        ChatPage(
+          onMessageAdded: () {
+            setState(() {
+              getMessages();
+            });
+          },
+        ),
         // diagnosis page
         const DiagnosisHistoryPage(),
         // settings page
@@ -109,6 +116,30 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
     }
   }
 
+  // reload page
+  void reloadPage(int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SFMainScaffold(
+          selectedIndex: index,
+        ),
+      ),
+    );
+  }
+
+  Future<void> getMessages() async {
+    messages = await chatManager.getChats();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+    fetchUserData();
+    getMessages();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,22 +151,51 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
               automaticallyImplyLeading: false,
               floating: true,
               actions: [
+                // chat
+                if (_selectedIndex == 1 && messages.isNotEmpty)
+                  IconButton(
+                    onPressed: () => SFDialog.showSFDialog(
+                      context: context,
+                      title: 'Delete Chat',
+                      content: const Text(
+                          'Are you sure you want to delete this chat?'),
+                      okText: 'CONFIRM',
+                      cancelText: 'CANCEL',
+                      onOk: () async {
+                        Navigator.pop(context);
+                        setState(() {
+                          chatManager.deleteChats();
+                        });
+                        reloadPage(1);
+                        if (context.mounted) {
+                          showToast('Chat deleted', context,
+                              status: Status.success);
+                        }
+                      },
+                      onCancel: () => Navigator.pop(context),
+                    ),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.red,
+                    ),
+                  ),
+
                 // edit profile
                 if (_selectedIndex == 3)
                   IconButton(
                     onPressed: () async {
-                      // final result = await Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => EditProfilePage(
-                      //       userData: userData,
-                      //     ),
-                      //   ),
-                      // );
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfilePage(
+                            userData: userData,
+                          ),
+                        ),
+                      );
 
-                      // if (result != null && result) {
-                      //   fetchUserData();
-                      // }
+                      if (result != null && result) {
+                        fetchUserData();
+                      }
                     },
                     icon: const Icon(Icons.edit_outlined),
                   ),
@@ -171,7 +231,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                           : Icons.auto_awesome_outlined,
                     ),
                     label: const Text(
-                      'Chatbot',
+                      'AI Chatbot',
                     ),
                   ),
                   NavigationRailDestination(
@@ -255,7 +315,7 @@ class _SFMainScaffoldState extends State<SFMainScaffold> {
                           ? Icons.auto_awesome
                           : Icons.auto_awesome_outlined,
                     ),
-                    label: 'Chatbot',
+                    label: 'AI Chatbot',
                   ),
                   NavigationDestination(
                     icon: Icon(

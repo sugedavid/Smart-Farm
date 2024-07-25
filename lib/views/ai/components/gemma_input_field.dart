@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:smart_farm/data/models/message.dart';
 import 'package:smart_farm/views/ai/components/chat_message.dart';
 import 'package:smart_farm/views/ai/service/gemma_service.dart';
 
@@ -12,8 +12,8 @@ class GemmaInputField extends StatefulWidget {
     required this.streamHandled,
   });
 
-  final List<Message> messages;
-  final ValueChanged<Message> streamHandled;
+  final List<MessageModel> messages;
+  final ValueChanged<MessageModel> streamHandled;
 
   @override
   GemmaInputFieldState createState() => GemmaInputFieldState();
@@ -22,7 +22,7 @@ class GemmaInputField extends StatefulWidget {
 class GemmaInputFieldState extends State<GemmaInputField> {
   final _gemma = GemmaLocalService();
   StreamSubscription<String?>? _subscription;
-  var _message = const Message(text: '');
+  var _message = const MessageModel(text: '');
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class GemmaInputFieldState extends State<GemmaInputField> {
         widget.streamHandled(_message);
       } else {
         setState(() {
-          _message = Message(text: '${_message.text}$token');
+          _message = MessageModel(text: '${_message.text}$token');
         });
       }
     });

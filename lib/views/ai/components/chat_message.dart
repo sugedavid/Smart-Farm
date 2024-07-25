@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:smart_farm/data/models/message.dart';
 import 'package:smart_farm/utils/spacing.dart';
 
 class ChatMessage extends StatelessWidget {
   const ChatMessage({super.key, required this.message});
 
-  final Message message;
+  final MessageModel message;
 
   @override
   Widget build(BuildContext context) {
