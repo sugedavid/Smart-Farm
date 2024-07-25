@@ -13,12 +13,6 @@ class SettingsManager {
     prefs.setString(_mlModelKey, savedModel);
   }
 
-  // delete ml model
-  Future<void> deleteMlModel(String model) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove(_mlModelKey);
-  }
-
   // get ml model
   Future<String> getMlModel() async {
     final prefs = await SharedPreferences.getInstance();
@@ -35,7 +29,7 @@ class SettingsManager {
   }
 
   // delete dark mode
-  Future<void> deleteDarkMode(bool model) async {
+  Future<void> deleteDarkMode() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_darkModeKey);
   }

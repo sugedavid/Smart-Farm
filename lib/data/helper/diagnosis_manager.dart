@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,13 +16,39 @@ class DiagnosisManager {
     prefs.setStringList(_diagnosisKey, diagnosisList);
   }
 
-  // delete a diagnosis based on its id
-  Future<void> deleteDiagnosis(int index) async {
+  // update a diagnosis based on its id
+  Future<void> updateDiagnosis(DiagnosisModel diagnosisModel) async {
+    if (diagnosisModel.id == null) return;
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var diagnosisList = prefs.getStringList(_diagnosisKey) ?? [];
-    diagnosisList.removeAt(index);
+    List<String> diagnosisList = prefs.getStringList(_diagnosisKey) ?? [];
+    List<DiagnosisModel> dL =
+        diagnosisList.map((e) => DiagnosisModel.fromJson(e)).toList();
+    int index = dL.indexWhere((element) => element.id == diagnosisModel.id);
+    diagnosisList[index] = diagnosisModel.toJson();
+
     prefs.setStringList(_diagnosisKey, diagnosisList);
+  }
+
+  // delete a diagnosis based on its id
+  Future<void> deleteDiagnosis(DiagnosisModel diagnosisModel) async {
+    if (diagnosisModel.id == null) return;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> diagnosisList = prefs.getStringList(_diagnosisKey) ?? [];
+    List<DiagnosisModel> dL =
+        diagnosisList.map((e) => DiagnosisModel.fromJson(e)).toList();
+    int index = dL.indexWhere((element) => element.id == diagnosisModel.id);
+    diagnosisList.removeAt(index);
+
+    prefs.setStringList(_diagnosisKey, diagnosisList);
+  }
+
+  // delete all diagnosis
+  Future<void> deleteAllDiagnosis() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(_diagnosisKey);
   }
 
   // get diagnosis
@@ -40,5 +67,15 @@ class DiagnosisManager {
     final filePath = '${appDir.path}/$fileName.png';
     await imageFile.copy(filePath);
     return filePath;
+  }
+
+  String generateUniqueId() {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Generate a random number
+    int randomPart = Random().nextInt(1000000); // Six digits random number
+    String uniqueId = '$timestamp$randomPart';
+
+    return uniqueId;
   }
 }

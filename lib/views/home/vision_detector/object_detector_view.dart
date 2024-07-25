@@ -128,7 +128,8 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
       );
       _customPaint = CustomPaint(painter: painter);
     } else {
-      String text = '\nObjects found: ${objects.length}\n\n';
+      String text =
+          objects.isNotEmpty ? '\nObjects found: ${objects.length}\n\n' : '';
       for (final object in objects) {
         text +=
             '${objects.indexOf(object) + 1}. ${object.labels.map((e) => '${e.text}: ${e.confidence}')}\n\n';

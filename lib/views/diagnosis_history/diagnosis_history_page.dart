@@ -41,6 +41,7 @@ class _DiagnosisHistoryPageState extends State<DiagnosisHistoryPage> {
             padding: EdgeInsets.zero,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
+              var diagnosis = snapshot.data![index];
               var imagePath = snapshot.data![index].imagePath;
               var image = File(imagePath);
               var description = snapshot.data![index].description;
@@ -67,7 +68,7 @@ class _DiagnosisHistoryPageState extends State<DiagnosisHistoryPage> {
                     onOk: () async {
                       Navigator.pop(context);
 
-                      await _diagnosisManager.deleteDiagnosis(index);
+                      await _diagnosisManager.deleteDiagnosis(diagnosis);
                       setState(() {});
                       if (context.mounted) {
                         showToast('Diagnosis deleted', context,
@@ -97,20 +98,21 @@ class _DiagnosisHistoryPageState extends State<DiagnosisHistoryPage> {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => AnalysisPage(
-                              diagnosis: description,
-                              image: image,
+                              diagnosisModel: diagnosis,
                             ),
                           ));
                         },
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.auto_awesome,
                               size: 21,
                             ),
                             AppWidthSpacing.small,
-                            Text('Generate Analysis'),
+                            Text(diagnosis.analysis.isEmpty
+                                ? 'Generate Analysis'
+                                : 'View Analysis'),
                           ],
                         )),
                   ),

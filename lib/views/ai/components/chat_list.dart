@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:smart_farm/data/models/message.dart';
 import 'package:smart_farm/views/ai/components/chat_input_field.dart';
 import 'package:smart_farm/views/ai/components/chat_message.dart';
 import 'package:smart_farm/views/ai/components/gemma_input_field.dart';
@@ -12,8 +12,8 @@ class ChatList extends StatelessWidget {
     required this.humanHandler,
   });
 
-  final List<Message> messages;
-  final ValueChanged<Message> gemmaHandler;
+  final List<MessageModel> messages;
+  final ValueChanged<MessageModel> gemmaHandler;
   final ValueChanged<String> humanHandler;
 
   @override

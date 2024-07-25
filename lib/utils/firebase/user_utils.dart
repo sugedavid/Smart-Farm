@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_farm/components/sf_toast_notification.dart';
+import 'package:smart_farm/data/helper/diagnosis_manager.dart';
 import 'package:smart_farm/data/models/user.dart';
 import 'package:smart_farm/utils/firebase/authentication_utils.dart';
 import 'package:smart_farm/views/email_verification/email_verification_page.dart';
@@ -129,7 +130,7 @@ Future<void> updateUserInfo(
         'firstName': firstName,
         'lastName': lastName,
       }).then((value) {
-        showToast('Profile updated successfully!', context,
+        showToast('Profile updated successfully', context,
             status: Status.success);
       });
     } catch (error) {
@@ -148,6 +149,7 @@ Future<void> updateUserInfo(
 // close user account
 Future<void> closeUserAccount(BuildContext context) async {
   var user = authUser();
+  DiagnosisManager diagnosisManager = DiagnosisManager();
   if (user != null) {
     try {
       final userRef =
@@ -166,6 +168,9 @@ Future<void> closeUserAccount(BuildContext context) async {
 
       // delete the user account
       await user.delete();
+
+      // delete all diagnosis
+      await diagnosisManager.deleteAllDiagnosis();
 
       if (context.mounted) {
         showToast('Account closed successfully!', context,

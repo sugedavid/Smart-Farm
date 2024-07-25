@@ -44,6 +44,8 @@ class _GalleryViewState extends State<GalleryView> {
 
   final DiagnosisManager _diagnosisManager = DiagnosisManager();
 
+  var diagnosisHistoryList = [];
+
   void _onScroll() {
     if (_scrollController.position.userScrollDirection ==
         ScrollDirection.reverse) {
@@ -62,12 +64,16 @@ class _GalleryViewState extends State<GalleryView> {
     }
   }
 
+  Future<void> getDiagnosis() async {
+    diagnosisHistoryList = await _diagnosisManager.getDiagnosis();
+  }
+
   @override
   void initState() {
     super.initState();
-
     _imagePicker = ImagePicker();
     _scrollController.addListener(_onScroll);
+    getDiagnosis();
   }
 
   @override
@@ -150,8 +156,11 @@ class _GalleryViewState extends State<GalleryView> {
                 )
               : Column(
                   children: [
+                    AppSpacing.large,
                     // anim
                     Lottie.asset(
+                      width: 220,
+                      height: 220,
                       AppAssets.leafScanAnim,
                       repeat: false,
                     ),
@@ -163,29 +172,34 @@ class _GalleryViewState extends State<GalleryView> {
           AppSpacing.xSmall,
 
           // image info
-          if (_image != null)
+          if (_image != null && widget.text != null && widget.text!.isNotEmpty)
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(_path == null ? '' : widget.text ?? ''),
+                    Text(_path == null
+                        ? ''
+                        : widget.text ?? 'Diagnosis not available'),
                     if (widget.text != null && widget.text!.isNotEmpty) ...{
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // recommendation
+                          // generate analysis
                           Align(
                             alignment: Alignment.center,
                             child: TextButton(
                                 onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => AnalysisPage(
-                                      diagnosis: _path == null
-                                          ? ''
-                                          : widget.text ?? '',
-                                      image: _image,
+                                      diagnosisModel: DiagnosisModel(
+                                        imagePath: _path ?? '',
+                                        description: widget.text ?? '',
+                                        analysis: '',
+                                        time: DateTime.now().toIso8601String(),
+                                        id: null,
+                                      ),
                                     ),
                                   ));
                                 },
@@ -208,12 +222,16 @@ class _GalleryViewState extends State<GalleryView> {
                             child: SizedBox(
                               width: 200,
                               child: FilledButton(
-                                child: const Text('Save Diagnosis'),
+                                child: const Text('Save'),
                                 onPressed: () async {
                                   await _diagnosisManager.saveDiagnosis(
                                     DiagnosisModel(
-                                        imagePath: _path ?? '',
-                                        description: widget.text ?? ''),
+                                      imagePath: _path ?? '',
+                                      description: widget.text ?? '',
+                                      analysis: '',
+                                      time: DateTime.now().toIso8601String(),
+                                      id: DiagnosisManager().generateUniqueId(),
+                                    ),
                                   );
                                   if (mounted) {
                                     showToast('Diagnosis saved', context,
@@ -239,6 +257,16 @@ class _GalleryViewState extends State<GalleryView> {
                 ),
               ),
             ),
+
+          // diagnosis not available
+          if (_image != null &&
+              (widget.text == null || widget.text!.isEmpty)) ...{
+            AppSpacing.medium,
+            const Text(
+              'Diagnosis not available',
+              textAlign: TextAlign.center,
+            ),
+          },
         ]);
   }
 
