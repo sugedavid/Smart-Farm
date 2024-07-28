@@ -4,6 +4,7 @@ class SettingsManager {
   static const String _settingsKey = 'settings';
   static const String _mlModelKey = '${_settingsKey}_ml_model';
   static const String _darkModeKey = '${_settingsKey}_dark_mode';
+  static const String _offlineKey = '${_settingsKey}_offline';
 
   // save ml model
   Future<void> saveMlModel(String model) async {
@@ -37,7 +38,22 @@ class SettingsManager {
   // get dark mode
   Future<bool> getDarkMode() async {
     final prefs = await SharedPreferences.getInstance();
-    bool savedModel = prefs.getBool(_darkModeKey) ?? false;
-    return savedModel;
+    bool savedMode = prefs.getBool(_darkModeKey) ?? false;
+    return savedMode;
+  }
+
+  // save offline
+  Future<void> saveOffline(bool offline) async {
+    final prefs = await SharedPreferences.getInstance();
+    bool savedMode = prefs.getBool(_offlineKey) ?? false;
+    savedMode = offline;
+    prefs.setBool(_offlineKey, savedMode);
+  }
+
+  // get offline
+  Future<bool> getOffline() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool savedMode = prefs.getBool(_offlineKey) ?? true;
+    return savedMode;
   }
 }

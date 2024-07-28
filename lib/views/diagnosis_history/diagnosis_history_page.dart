@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_farm/components/sf_dialog.dart';
 import 'package:smart_farm/components/sf_toast_notification.dart';
 import 'package:smart_farm/data/helper/diagnosis_manager.dart';
 import 'package:smart_farm/data/models/diagnosis.dart';
+import 'package:smart_farm/main.dart';
+import 'package:smart_farm/utils/date.dart';
 import 'package:smart_farm/utils/spacing.dart';
 import 'package:smart_farm/views/ai/analysis_page.dart';
 
@@ -20,6 +23,8 @@ class _DiagnosisHistoryPageState extends State<DiagnosisHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return FutureBuilder<List<DiagnosisModel>>(
       future: _diagnosisManager.getDiagnosis(),
       builder: (context, snapshot) {
@@ -88,10 +93,17 @@ class _DiagnosisHistoryPageState extends State<DiagnosisHistoryPage> {
                   ),
                 ),
                 children: <Widget>[
+                  // time
+                  Text(
+                    formatDateString(diagnosis.time),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+
                   // description
                   Text(description),
 
-                  // recommendation
+                  // generate recommendation
                   Align(
                     alignment: Alignment.center,
                     child: FilledButton.tonal(
@@ -99,6 +111,8 @@ class _DiagnosisHistoryPageState extends State<DiagnosisHistoryPage> {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => AnalysisPage(
                               diagnosisModel: diagnosis,
+                              isOffline: diagnosis.isOffline ??
+                                  themeNotifier.isOffline,
                             ),
                           ));
                         },

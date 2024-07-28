@@ -69,11 +69,11 @@ class DiagnosisManager {
     return filePath;
   }
 
+  // generate a six digits random number
   String generateUniqueId() {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    // Generate a random number
-    int randomPart = Random().nextInt(1000000); // Six digits random number
+    int randomPart = Random().nextInt(1000000);
     String uniqueId = '$timestamp$randomPart';
 
     return uniqueId;

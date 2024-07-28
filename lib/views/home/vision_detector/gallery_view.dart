@@ -6,10 +6,12 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_farm/components/sf_main_scaffold.dart';
 import 'package:smart_farm/components/sf_toast_notification.dart';
 import 'package:smart_farm/data/helper/diagnosis_manager.dart';
 import 'package:smart_farm/data/models/diagnosis.dart';
+import 'package:smart_farm/main.dart';
 import 'package:smart_farm/utils/assets.dart';
 import 'package:smart_farm/utils/spacing.dart';
 import 'package:smart_farm/views/ai/analysis_page.dart';
@@ -129,6 +131,8 @@ class _GalleryViewState extends State<GalleryView> {
 
   // body
   Widget _galleryBody() {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return ListView(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(vertical: 22),
@@ -197,9 +201,11 @@ class _GalleryViewState extends State<GalleryView> {
                                         imagePath: _path ?? '',
                                         description: widget.text ?? '',
                                         analysis: '',
+                                        isOffline: null,
                                         time: DateTime.now().toIso8601String(),
                                         id: null,
                                       ),
+                                      isOffline: themeNotifier.isOffline,
                                     ),
                                   ));
                                 },
@@ -229,6 +235,7 @@ class _GalleryViewState extends State<GalleryView> {
                                       imagePath: _path ?? '',
                                       description: widget.text ?? '',
                                       analysis: '',
+                                      isOffline: null,
                                       time: DateTime.now().toIso8601String(),
                                       id: DiagnosisManager().generateUniqueId(),
                                     ),

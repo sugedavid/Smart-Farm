@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SFDialog {
-  static Future<bool> showSFDialog({
+  static Future<void> showSFDialog({
     required BuildContext context,
     required String title,
     required Widget content,
