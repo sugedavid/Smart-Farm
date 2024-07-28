@@ -36,13 +36,8 @@ class _SFSinglePageScaffoldState extends State<SFSinglePageScaffold>
         alignment: kIsWeb && isLargeScreen(context) ? Alignment.center : null,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            child: SizedBox(
               width: kIsWeb ? 400 : null,
               child: widget.child,
             ),

@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_farm/data/helper/chat_manager.dart';
 import 'package:smart_farm/data/models/message.dart';
+import 'package:smart_farm/main.dart';
 import 'package:smart_farm/views/ai/components/chat_list.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key, required this.onMessageAdded});
+  const ChatPage({
+    super.key,
+    required this.onMessageAdded,
+    required this.isOffline,
+  });
 
   final Function() onMessageAdded;
+  final bool isOffline;
 
   @override
   ChatPageState createState() => ChatPageState();
@@ -24,12 +31,16 @@ class ChatPageState extends State<ChatPage> {
   }
 
   Future<void> getMessages() async {
-    _messages = await chatManager.getChats();
+    var key =
+        widget.isOffline ? ChatManager.gemmaChatKey : ChatManager.geminiChatKey;
+    _messages = await chatManager.getChat(key);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return Stack(children: [
       FutureBuilder(
         future: FlutterGemmaPlugin.instance.isInitialized,
@@ -43,20 +54,45 @@ class ChatPageState extends State<ChatPage> {
                 ChatList(
                   gemmaHandler: (message) {
                     setState(() {
-                      chatManager.saveChat(message);
+                      chatManager.saveChat(ChatManager.gemmaChatKey, message);
+                      getMessages();
+                      widget.onMessageAdded();
+                    });
+                  },
+                  geminiHandler: (message) {
+                    setState(() {
+                      chatManager.saveChat(ChatManager.geminiChatKey, message);
                       getMessages();
                       widget.onMessageAdded();
                     });
                   },
                   humanHandler: (text) {
                     setState(() {
-                      chatManager
-                          .saveChat(MessageModel(text: text, isUser: true));
+                      if (themeNotifier.isOffline) {
+                        chatManager.saveChat(
+                          ChatManager.gemmaChatKey,
+                          MessageModel(
+                            text: text,
+                            isUser: true,
+                            time: DateTime.now().toIso8601String(),
+                          ),
+                        );
+                      } else {
+                        chatManager.saveChat(
+                          ChatManager.geminiChatKey,
+                          MessageModel(
+                            text: text,
+                            isUser: true,
+                            time: DateTime.now().toIso8601String(),
+                          ),
+                        );
+                      }
                       getMessages();
                       widget.onMessageAdded();
                     });
                   },
                   messages: _messages,
+                  isOffline: themeNotifier.isOffline,
                 ),
               ],
             );

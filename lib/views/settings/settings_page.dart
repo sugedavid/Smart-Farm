@@ -27,13 +27,8 @@ class SettingsPageState extends State<SettingsPage> {
   bool _isLoading = false;
 
   // ai & ml
-  bool onDeviceAI = true;
   final _models = ['beans_model', 'plants_disease'];
   final modelController = TextEditingController();
-
-  // general
-
-  bool darkMode = false;
 
   // toggle loading
   void toggleLoading() {
@@ -45,7 +40,6 @@ class SettingsPageState extends State<SettingsPage> {
   // init settings
   void _initializeSettings() async {
     modelController.text = await _settingsManager.getMlModel();
-    darkMode = await _settingsManager.getDarkMode();
     setState(() {});
   }
 
@@ -92,11 +86,11 @@ class SettingsPageState extends State<SettingsPage> {
                     user?.emailVerified ?? false ? 'Verified' : 'Not Verified'),
                 padding: EdgeInsets.zero,
                 backgroundColor: user?.emailVerified ?? false
-                    ? Colors.green.withOpacity(0.1)
+                    ? Theme.of(context).colorScheme.primaryContainer
                     : Colors.red.withOpacity(0.1),
                 labelStyle: TextStyle(
                     color: user?.emailVerified ?? false
-                        ? Colors.green
+                        ? Theme.of(context).colorScheme.onPrimaryContainer
                         : Colors.red,
                     fontSize: 12),
                 side: BorderSide.none,
@@ -199,18 +193,15 @@ class SettingsPageState extends State<SettingsPage> {
                 size: 20,
               ),
               title: const Text(
-                'On-device AI',
+                'Gemma AI',
               ),
               subtitle: const Text(
-                'Use an offline version of the AI',
+                'On-device AI model that works offline',
               ),
               trailing: Switch(
-                value: onDeviceAI,
-                // activeColor: Colors.red,
-                onChanged: (bool value) {
-                  setState(() {
-                    onDeviceAI = value;
-                  });
+                value: themeNotifier.isOffline,
+                onChanged: (bool value) async {
+                  themeNotifier.toggleOffline();
                 },
               ),
             ),
@@ -241,13 +232,8 @@ class SettingsPageState extends State<SettingsPage> {
               ),
               trailing: Switch(
                 value: themeNotifier.isDarkMode,
-                // activeColor: Colors.red,
                 onChanged: (bool value) async {
-                  // await _settingsManager.saveDarkMode(value);
                   themeNotifier.toggleTheme();
-                  setState(() {
-                    darkMode = value;
-                  });
                 },
               ),
             ),

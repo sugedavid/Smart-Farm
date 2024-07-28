@@ -1,31 +1,37 @@
 import 'dart:io';
 
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/flutter_gemma_interface.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:smart_farm/components/sf_main_scaffold.dart';
 import 'package:smart_farm/components/sf_single_page_scaffold.dart';
+import 'package:smart_farm/components/sf_toast_notification.dart';
 import 'package:smart_farm/data/helper/diagnosis_manager.dart';
+import 'package:smart_farm/data/helper/settings_manager.dart';
 import 'package:smart_farm/data/models/diagnosis.dart';
+import 'package:smart_farm/data/service/gemini_service.dart';
 import 'package:smart_farm/utils/spacing.dart';
+import 'package:smart_farm/data/service/gemma_service.dart';
 
 class AnalysisPage extends StatefulWidget {
   const AnalysisPage({
     super.key,
     required this.diagnosisModel,
+    required this.isOffline,
   });
 
   final DiagnosisModel diagnosisModel;
+  final bool isOffline;
 
   @override
   State<AnalysisPage> createState() => _AnalysisPageState();
 }
 
 class _AnalysisPageState extends State<AnalysisPage> {
-  final flutterGemma = FlutterGemmaPlugin.instance;
-  late Future<String?> response;
+  late Future<dynamic> response;
 
+  final SettingsManager settingsManager = SettingsManager();
   final DiagnosisManager _diagnosisManager = DiagnosisManager();
 
   @override
@@ -34,11 +40,15 @@ class _AnalysisPageState extends State<AnalysisPage> {
     generateResponse();
   }
 
+  // generate AI analysis
   void generateResponse() {
+    var prompt =
+        'I have conducted bean plant diagnosis. Analyse the results and give me summary of recommendations and possible ways to manage it: ${widget.diagnosisModel.description}';
+
     if (widget.diagnosisModel.analysis.isEmpty) {
-      response = flutterGemma.getResponse(
-          prompt:
-              'I have conducted bean plant diagnosis. Analyse the results and give me recommendations and possible ways to manage it: ${widget.diagnosisModel.description}');
+      response = widget.isOffline
+          ? GemmaLocalService().processResponse(prompt)
+          : GeminiLocalService().processResponse(prompt);
     }
   }
 
@@ -97,11 +107,21 @@ class _AnalysisPageState extends State<AnalysisPage> {
 
                 // data
                 else {
-                  final data = snapshot.data as String;
-                  widget.diagnosisModel.analysis = data;
-                  _diagnosisManager.updateDiagnosis(widget.diagnosisModel);
+                  var analysis = '';
+                  if (widget.isOffline) {
+                    var gemmaData = snapshot.data as String;
+                    analysis = gemmaData;
+                  } else {
+                    var geminiData = snapshot.data as GenerateContentResponse;
+                    analysis = geminiData.text ?? '';
+                  }
 
-                  return analysisBody(data, context);
+                  var diagnosisModel = widget.diagnosisModel;
+                  diagnosisModel.analysis = analysis;
+                  diagnosisModel.isOffline = widget.isOffline;
+                  _diagnosisManager.updateDiagnosis(diagnosisModel);
+
+                  return analysisBody(analysis, context);
                 }
               },
             ),
@@ -125,6 +145,42 @@ class _AnalysisPageState extends State<AnalysisPage> {
           ),
         ),
         AppSpacing.medium,
+
+        // ai model
+        ActionChip(
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.auto_awesome,
+                color: widget.isOffline
+                    ? Theme.of(context).colorScheme.onErrorContainer
+                    : Theme.of(context).colorScheme.onPrimaryContainer,
+                size: 18,
+              ),
+              AppWidthSpacing.xSmall,
+              Text(widget.diagnosisModel.isOffline ?? widget.isOffline
+                  ? 'Gemma AI (on-device)'
+                  : 'Gemini AI'),
+            ],
+          ),
+          padding: EdgeInsets.zero,
+          backgroundColor: widget.isOffline
+              ? Theme.of(context).colorScheme.errorContainer
+              : Theme.of(context).colorScheme.primaryContainer,
+          labelStyle: TextStyle(
+              color: widget.isOffline
+                  ? Theme.of(context).colorScheme.onErrorContainer
+                  : Theme.of(context).colorScheme.onPrimaryContainer,
+              fontSize: 12),
+          side: BorderSide.none,
+          onPressed: () async => widget.isOffline
+              ? showToast('Gemma AI model (offline)', context,
+                  status: Status.info)
+              : showToast('Gemini AI model (online)', context,
+                  status: Status.info),
+        ),
+        AppSpacing.small,
 
         // analysis
         MarkdownBody(

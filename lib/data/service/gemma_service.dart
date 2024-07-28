@@ -9,4 +9,8 @@ class GemmaLocalService {
   Stream<String?> processMessageAsync(List<MessageModel> messages) {
     return FlutterGemmaPlugin.instance.getChatResponseAsync(messages: messages);
   }
+
+  Future<String?> processResponse(String prompt) {
+    return FlutterGemmaPlugin.instance.getResponse(prompt: prompt);
+  }
 }

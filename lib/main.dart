@@ -19,6 +19,13 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // app check
+  // await FirebaseAppCheck.instance.activate(
+  //   androidProvider: AndroidProvider.debug,
+  //   appleProvider: AppleProvider.appAttest,
+  //   webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+  // );
+
   // gemma
   await FlutterGemmaPlugin.instance.init(
     temperature: 1.0,
@@ -110,8 +117,10 @@ class _MainAppState extends State<MainApp> {
 class ThemeNotifier with ChangeNotifier {
   final SettingsManager _settingsManager = SettingsManager();
   bool _isDarkMode = false;
+  bool _isOffline = true;
 
   bool get isDarkMode => _isDarkMode;
+  bool get isOffline => _isOffline;
 
   ThemeNotifier() {
     _loadTheme();
@@ -119,12 +128,19 @@ class ThemeNotifier with ChangeNotifier {
 
   void _loadTheme() async {
     _isDarkMode = await _settingsManager.getDarkMode();
+    _isOffline = await _settingsManager.getOffline();
     notifyListeners();
   }
 
   void toggleTheme() {
     _isDarkMode = !_isDarkMode;
     _settingsManager.saveDarkMode(_isDarkMode);
+    notifyListeners();
+  }
+
+  void toggleOffline() {
+    _isOffline = !_isOffline;
+    _settingsManager.saveOffline(_isOffline);
     notifyListeners();
   }
 }
