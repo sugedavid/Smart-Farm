@@ -1,59 +1,59 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsManager {
-  static const String _settingsKey = 'settings';
-  static const String _mlModelKey = '${_settingsKey}_ml_model';
-  static const String _darkModeKey = '${_settingsKey}_dark_mode';
-  static const String _offlineKey = '${_settingsKey}_offline';
+  static const String settingsKey = 'settings';
+  static const String mlModelKey = '${settingsKey}_ml_model';
+  static const String darkModeKey = '${settingsKey}_dark_mode';
+  static const String offlineKey = '${settingsKey}_offline';
 
   // save ml model
   Future<void> saveMlModel(String model) async {
     final prefs = await SharedPreferences.getInstance();
-    String savedModel = prefs.getString(_mlModelKey) ?? '';
+    String savedModel = prefs.getString(mlModelKey) ?? '';
     savedModel = model;
-    prefs.setString(_mlModelKey, savedModel);
+    prefs.setString(mlModelKey, savedModel);
   }
 
   // get ml model
   Future<String> getMlModel() async {
     final prefs = await SharedPreferences.getInstance();
-    String savedModel = prefs.getString(_mlModelKey) ?? 'beans_model';
+    String savedModel = prefs.getString(mlModelKey) ?? 'beans_model';
     return savedModel;
   }
 
   // save dark mode
   Future<void> saveDarkMode(bool darkMode) async {
     final prefs = await SharedPreferences.getInstance();
-    bool savedMode = prefs.getBool(_darkModeKey) ?? false;
+    bool savedMode = prefs.getBool(darkModeKey) ?? false;
     savedMode = darkMode;
-    prefs.setBool(_darkModeKey, savedMode);
+    prefs.setBool(darkModeKey, savedMode);
   }
 
   // delete dark mode
   Future<void> deleteDarkMode() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove(_darkModeKey);
+    prefs.remove(darkModeKey);
   }
 
   // get dark mode
   Future<bool> getDarkMode() async {
     final prefs = await SharedPreferences.getInstance();
-    bool savedMode = prefs.getBool(_darkModeKey) ?? false;
+    bool savedMode = prefs.getBool(darkModeKey) ?? false;
     return savedMode;
   }
 
   // save offline
   Future<void> saveOffline(bool offline) async {
     final prefs = await SharedPreferences.getInstance();
-    bool savedMode = prefs.getBool(_offlineKey) ?? false;
+    bool savedMode = prefs.getBool(offlineKey) ?? false;
     savedMode = offline;
-    prefs.setBool(_offlineKey, savedMode);
+    prefs.setBool(offlineKey, savedMode);
   }
 
   // get offline
   Future<bool> getOffline() async {
     final prefs = await SharedPreferences.getInstance();
-    bool savedMode = prefs.getBool(_offlineKey) ?? true;
+    bool savedMode = prefs.getBool(offlineKey) ?? true;
     return savedMode;
   }
 }

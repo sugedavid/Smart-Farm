@@ -10,6 +10,10 @@ class GeminiLocalService {
     temperature: 0.9,
   );
 
+  // prompt
+  String prompt(String description) =>
+      'You are a Farm AI assistant. You will recieve the results of a conducted bean plant diagnosis. Analyse the results and give provide a summary, no more than three paragraphs , of recommendations and possible ways to manage it: $description';
+
   // process message
   Future<GenerateContentResponse> processMessage(List<MessageModel> messages) {
     return geminiModel.generateContent(
@@ -19,9 +23,9 @@ class GeminiLocalService {
   }
 
   // process response
-  Future<GenerateContentResponse> processResponse(String prompt) {
+  Future<GenerateContentResponse> processResponse(String description) {
     return geminiModel.generateContent(
-      [Content.text(prompt)],
+      [Content.text(prompt(description))],
       generationConfig: generationConfig,
     );
   }

@@ -2,14 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_farm/components/sf_main_scaffold.dart';
+import 'package:smart_farm/views/components/sf_main_scaffold.dart';
 import 'package:smart_farm/data/helper/settings_manager.dart';
 import 'package:smart_farm/data/models/user.dart';
 import 'package:smart_farm/firebase_options.dart';
 import 'package:smart_farm/utils/colors.dart';
 import 'package:smart_farm/utils/firebase/user_utils.dart';
-import 'package:smart_farm/views/email_verification/email_verification_page.dart';
-import 'package:smart_farm/views/login/login_page.dart';
+import 'package:smart_farm/views/pages/email_verification/email_verification_page.dart';
+import 'package:smart_farm/views/pages/login/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

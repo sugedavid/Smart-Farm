@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_farm/components/sf_toast_notification.dart';
+import 'package:smart_farm/views/components/sf_toast_notification.dart';
 import 'package:smart_farm/data/helper/diagnosis_manager.dart';
 import 'package:smart_farm/data/models/user.dart';
 import 'package:smart_farm/utils/firebase/authentication_utils.dart';
-import 'package:smart_farm/views/email_verification/email_verification_page.dart';
-import 'package:smart_farm/views/login/login_page.dart';
+import 'package:smart_farm/views/pages/email_verification/email_verification_page.dart';
+import 'package:smart_farm/views/pages/login/login_page.dart';
 
 // db reference
 final dbInstance = FirebaseFirestore.instance;
