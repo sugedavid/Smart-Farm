@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_farm/components/sf_main_scaffold.dart';
-import 'package:smart_farm/components/sf_toast_notification.dart';
+import 'package:smart_farm/views/components/sf_main_scaffold.dart';
+import 'package:smart_farm/views/components/sf_toast_notification.dart';
 import 'package:smart_farm/utils/firebase/user_utils.dart';
-import 'package:smart_farm/views/login/login_page.dart';
+import 'package:smart_farm/views/pages/login/login_page.dart';
 
 // register a new user
 Future<void> registerUser(String firstName, String lastName,

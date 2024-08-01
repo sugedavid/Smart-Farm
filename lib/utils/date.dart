@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 
 // format date
-String formatDateString(String dateString) {
+String formatDateString(String dateString, {DateTime? currentDate}) {
   final dateTime = DateTime.parse(dateString);
-  final now = DateTime.now();
+  final now = currentDate ?? DateTime.now();
   final yearFormatter = DateFormat("y");
   final ordinalSuffix = getOrdinalSuffix(dateTime.day);
   final currYearFormatter = DateFormat("d'$ordinalSuffix' MMM 'at' hh:mm a");
