@@ -43,6 +43,7 @@ jobs:
         run: flutter test
 
   build-and-deploy:
+    name: Build apk and deploy
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'push'
@@ -72,7 +73,7 @@ jobs:
       # build debug APK
       - name: 🛠️ Build debug APK 🟠
         run: flutter build apk --debug
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
           path: build/app/outputs/apk/debug/app-debug.apk
@@ -80,7 +81,7 @@ jobs:
       # build release APK
       - name: 🛠️ Build release APK 🟢
         run: flutter build apk --release
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/apk/release/app-release.apk

@@ -4,6 +4,8 @@ import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:smart_farm/data/service/analytics_service.dart';
+import 'package:smart_farm/data/service/performance_service.dart';
 import 'package:smart_farm/views/components/sf_main_scaffold.dart';
 import 'package:smart_farm/views/components/sf_single_page_scaffold.dart';
 import 'package:smart_farm/views/components/sf_toast_notification.dart';
@@ -44,10 +46,14 @@ class _AnalysisPageState extends State<AnalysisPage> {
   void generateResponse() {
     if (widget.diagnosisModel.analysis.isEmpty) {
       response = widget.isOffline
-          ? GemmaLocalService()
-              .processResponse(widget.diagnosisModel.description)
-          : GeminiLocalService()
-              .processResponse(widget.diagnosisModel.description);
+          ? GemmaService().processResponse(
+              widget.diagnosisModel.description,
+              PerformanceService().gemmaAnalysisTrace,
+              AnalyticsService().analysisEvent)
+          : GeminiService().processResponse(
+              widget.diagnosisModel.description,
+              PerformanceService().geminiAnalysisTrace,
+              AnalyticsService().analysisEvent);
     }
   }
 
@@ -79,6 +85,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         // anim
                         LoadingAnimationWidget.threeRotatingDots(

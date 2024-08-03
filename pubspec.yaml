@@ -1,7 +1,7 @@
 name: smart_farm
 description: 'Precision Farming using on-device ML and AI'
 publish_to: 'none'
-version: 0.1.0
+version: 0.1.1
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
@@ -9,6 +9,7 @@ environment:
 dependencies:
   camera: ^0.11.0+1
   cloud_firestore: ^5.1.0
+  firebase_analytics: ^11.2.1
   firebase_app_check: ^0.3.0+4
   firebase_auth: ^5.1.1
   firebase_core: ^3.1.1
