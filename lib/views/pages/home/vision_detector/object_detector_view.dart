@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
 import 'package:smart_farm/data/helper/settings_manager.dart';
 import 'package:smart_farm/data/models/user.dart';
+import 'package:smart_farm/data/service/analytics_service.dart';
+import 'package:smart_farm/data/service/performance_service.dart';
 
 import 'detector_view.dart';
 import 'painters/object_detector_painter.dart';
@@ -116,6 +118,9 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     setState(() {
       _text = '';
     });
+    await PerformanceService().diagnosisTrace.start();
+    var startTime = DateTime.now();
+
     final objects = await _objectDetector!.processImage(inputImage);
     debugPrint('Objects found: ${objects.length}\n\n');
     if (inputImage.metadata?.size != null &&
@@ -142,5 +147,11 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     if (mounted) {
       setState(() {});
     }
+
+    await PerformanceService().diagnosisTrace.stop();
+    var endTime = DateTime.now();
+    var duration = endTime.difference(startTime).inMilliseconds;
+    await AnalyticsService().logEvent(AnalyticsService().diagnosisEvent,
+        AnalyticsService().diagnosisModel, duration);
   }
 }

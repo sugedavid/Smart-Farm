@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_farm/data/models/message.dart';
+import 'package:smart_farm/data/service/analytics_service.dart';
+import 'package:smart_farm/data/service/performance_service.dart';
 import 'package:smart_farm/views/pages/ai/components/chat_message.dart';
 import 'package:smart_farm/data/service/gemini_service.dart';
 import 'package:smart_farm/data/service/gemma_service.dart';
@@ -26,7 +28,7 @@ class AIInputField extends StatefulWidget {
 }
 
 class AIInputFieldState extends State<AIInputField> {
-  final _gemma = GemmaLocalService();
+  final _gemma = GemmaService();
   StreamSubscription<String?>? _subscription;
   var _message = MessageModel(
     text: '',
@@ -43,8 +45,12 @@ class AIInputFieldState extends State<AIInputField> {
   void _processMessages() {
     // gemma
     if (widget.isOffline) {
-      _subscription =
-          _gemma.processMessageAsync(widget.messages).listen((String? token) {
+      _subscription = _gemma
+          .processMessageAsync(
+              widget.messages,
+              PerformanceService().gemmaChatbotTrace,
+              AnalyticsService().chatBotEvent)
+          .listen((String? token) {
         // finished adding text
         if (token == null) {
           widget.streamHandled(_message);
@@ -62,8 +68,11 @@ class AIInputFieldState extends State<AIInputField> {
     }
     // gemini
     else {
-      GeminiLocalService()
-          .processMessage(widget.messages)
+      GeminiService()
+          .processMessage(
+              widget.messages,
+              PerformanceService().geminiChatbotTrace,
+              AnalyticsService().chatBotEvent)
           .then((GenerateContentResponse value) {
         setState(() {
           _message = MessageModel(
