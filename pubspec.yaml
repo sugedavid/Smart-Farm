@@ -1,7 +1,7 @@
 name: smart_farm
 description: 'Precision Farming using on-device ML and AI'
 publish_to: 'none'
-version: 0.1.1
+version: 0.2.0
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
@@ -24,6 +24,7 @@ dependencies:
   google_mlkit_commons: ^0.7.1
   google_mlkit_image_labeling: ^0.12.0
   google_mlkit_object_detection: ^0.13.0
+  http: ^1.2.2
   image_picker: ^1.1.2
   intl: ^0.19.0
   loading_animation_widget: ^1.2.1
