@@ -1,15 +1,16 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_farm/views/components/sf_main_scaffold.dart';
-import 'package:smart_farm/data/helper/settings_manager.dart';
-import 'package:smart_farm/data/models/user.dart';
+import 'package:smart_farm/core/data/models/user.dart';
+import 'package:smart_farm/core/helper/settings_manager.dart';
+import 'package:smart_farm/core/utils/colors.dart';
+import 'package:smart_farm/core/utils/firebase/user_utils.dart';
 import 'package:smart_farm/firebase_options.dart';
-import 'package:smart_farm/utils/colors.dart';
-import 'package:smart_farm/utils/firebase/user_utils.dart';
-import 'package:smart_farm/views/pages/email_verification/email_verification_page.dart';
-import 'package:smart_farm/views/pages/login/login_page.dart';
+import 'package:smart_farm/presentation/email_verification/email_verification_page.dart';
+import 'package:smart_farm/presentation/login/login_page.dart';
+import 'package:smart_farm/shared/presentation/sf_main_scaffold.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +21,11 @@ Future<void> main() async {
   );
 
   // app check
-  // await FirebaseAppCheck.instance.activate(
-  //   androidProvider: AndroidProvider.debug,
-  //   appleProvider: AppleProvider.appAttest,
-  //   webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-  // );
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.appAttest,
+    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+  );
 
   // gemma
   await FlutterGemmaPlugin.instance.init(
@@ -118,9 +119,11 @@ class ThemeNotifier with ChangeNotifier {
   final SettingsManager _settingsManager = SettingsManager();
   bool _isDarkMode = false;
   bool _isOffline = true;
+  String _aiModel = AIModel.gemini.name;
 
   bool get isDarkMode => _isDarkMode;
   bool get isOffline => _isOffline;
+  String get aiModel => _aiModel;
 
   ThemeNotifier() {
     _loadTheme();
@@ -129,6 +132,7 @@ class ThemeNotifier with ChangeNotifier {
   void _loadTheme() async {
     _isDarkMode = await _settingsManager.getDarkMode();
     _isOffline = await _settingsManager.getOffline();
+    _aiModel = await _settingsManager.getAIModel();
     notifyListeners();
   }
 
@@ -141,6 +145,12 @@ class ThemeNotifier with ChangeNotifier {
   void toggleOffline() {
     _isOffline = !_isOffline;
     _settingsManager.saveOffline(_isOffline);
+    notifyListeners();
+  }
+
+  void saveAIModel(aiModel) {
+    _aiModel = aiModel;
+    _settingsManager.saveAIModel(_aiModel);
     notifyListeners();
   }
 }
